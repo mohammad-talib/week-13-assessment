@@ -66,14 +66,14 @@
        <li>After submission, the page should be redirect to new page.</li>
        <li>The new page should display, "Hello (username)" </li>
 </ul>
-<form>
+<form method="post">
     <div class="container">
         <h1>Register</h1>
         <p>Please fill in this form to create an account.</p>
         <hr>
 
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required>
+        <label for="name"><b>username</b></label>
+        <input type="text" placeholder="Enter Email" name="username" required>
 
         <label for="psw"><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="psw" required>
@@ -85,11 +85,11 @@
         <input type="text" placeholder="Email" name="email" required>
 
         <label for="phone-number"><b>Phone Number</b></label>
-        <input type="text" placeholder="phone-number" name="phone-number" required>
+        <input type="text" placeholder="phone-number" name="phonenumber" required>
         <hr>
 
         <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-        <button type="submit" class="registerbtn">Register</button>
+        <button type="submit" name="submit" class="registerbtn">Register</button>
     </div>
 
     <div class="container signin">
@@ -98,8 +98,13 @@
 </form>
 </body>
 <?php
+
+$servername = "localhost";
+$username = "root";
+$password = "Mohammed.123.";
+$database = "myapplication";
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=myDB", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected successfully";
@@ -109,3 +114,34 @@ catch(PDOException $e)
     echo "Connection failed: " . $e->getMessage();
     }
 
+    session_start();
+
+    $_SESSION['username'] = $_POST['username'];
+
+    if(isset($_POST['submit'])){
+        $sql = "INSERT INTO users (username, password, email, phone_number)
+        VALUES ('$_POST[username]', '$_POST[psw]','$_POST[email]','$_POST[phonenumber]')";
+        $statement = $conn->prepare($sql);
+        $state = $statement->execute();
+        if($state){
+            header("Location: home.php");
+        }
+    }
+
+
+    
+
+
+    //sql commint
+
+    /**
+     * create database myapplication;
+     * use myapplication;
+        
+
+     * select database();
+
+     * create table users (id int Auto_increment ,username varchar(25), password varchar(25), email varchar(25), phone_number varchar(25));
+     * 
+     * select * from users;
+     */
